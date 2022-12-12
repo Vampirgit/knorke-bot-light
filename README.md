@@ -2,7 +2,8 @@
 
 ## Description
 A (private) discord bot for the knorke server. This bot is based on the **Discord.js** module for **node.js**.
-The bot is almost entirely the work of Rubén Velasco and has been modified only to make it more lightweight and remove database functionalities, as well as switching the Audiostream-library from ytdl to play-dl.
+
+The bot is a lightweight version of knorke-bot and has been modified to remove database functionalities, as well as switching the Audiostream-library from ytdl to play-dl.
 
 ## Setup
 To test this bot, sign into [Discord Developer Applications](https://discord.com/developers/applications) and create a new application. Now under "Settings/Bot" click "Add Bot".
