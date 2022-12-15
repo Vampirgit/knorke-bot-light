@@ -35,7 +35,6 @@ module.exports = {
                 video = await searchYouTubeAsync(args);
                 url = video.url;
 
-                await queue.addQueue(url, message.guild.id);
             } catch (err) {
                 console.log(err);
                 return message.reply("There was an error with the search!");
@@ -75,10 +74,10 @@ module.exports = {
                     connection.subscribe(audioPlayer.instance);
 
                     queueConst.audioPlayer = audioPlayer.instance;
-                    playSong(message.guild, queueConst.songs[0]);
+                    await playSong(message.guild, queueConst.songs[0]);
                 } else {
                     serverQueue.songs.push(url)
-                    return message.channel.send(`${song.title} ist in der Queue`)
+                    return message.channel.send(`${video.title} ist in der Queue`)
                 }
 
                 if (video) {
@@ -88,8 +87,6 @@ module.exports = {
                         .setDescription(video.title);
                     message.channel.send({ embeds: [Embed] });
                 }
-
-                //audioPlayer.instance.on(AudioPlayerStatus.Idle, () => connection.destroy());
                 
             } catch (err) {
                 console.log(err);
@@ -102,7 +99,12 @@ async function playSong(guild, url) {
     const serverQueue = queue.get(guild.id);
 
     if(!url) {
-        serverQueue.connection.destroy();
+        try{
+            serverQueue.connection.destroy();
+        } catch(e) {
+
+        }
+        
         queue.delete(guild.id);
         return;
     }
@@ -111,9 +113,8 @@ async function playSong(guild, url) {
     let resource = createAudioResource(stream.stream, {
         inputType: stream.type
     })
-
-    const dispatch = serverQueue.audioPlayer.play(resource)
-    .on(AudioPlayerStatus.Idle, () => {
+    const dispatch = serverQueue.audioPlayer.play(resource);
+    serverQueue.audioPlayer.on(AudioPlayerStatus.Idle, () => {
         serverQueue.songs.shift();
         playSong(guild, serverQueue.songs[0]);
     });
