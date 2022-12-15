@@ -2,6 +2,8 @@ const config = require(__basedir + "/config.json");
 const token = require(__basedir + "/tokens.json");
 const play = require('play-dl');
 
+let { queue } = require('../../utils/audio/Queue');
+
 const {
     joinVoiceChannel,
     AudioPlayerStatus,
@@ -9,8 +11,6 @@ const {
     createAudioPlayer,
 } = require('@discordjs/voice');
 const YouTube = require("discord-youtube-api");
-
-var queue = new Map();
 
 module.exports = {
     name: "play",

@@ -8,7 +8,7 @@ module.exports = {
             return message.reply("There is no audio player!");
         }
 
-        audioPlayer.instance.stop();
+        audioPlayer.instance.destroy();
         
     }
 }
