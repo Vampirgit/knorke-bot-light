@@ -3,13 +3,13 @@ global.__basedir = __dirname;
 const Discord = require("discord.js");
 const config = require("./config.json");
 const tokens = require("./tokens.json");
+const { Client, GatewayIntentBits } = require('discord.js')
 
-const client = new Discord.Client({intents: [
-    Discord.Intents.FLAGS.GUILDS, 
-    Discord.Intents.FLAGS.GUILD_MESSAGES, 
-    Discord.Intents.FLAGS.GUILD_VOICE_STATES, 
-    Discord.Intents.FLAGS.MESSAGE_CONTENT,
-
+const client = new Client({intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.MessageContent,
 ]});
 
 client.commands = new Discord.Collection();
