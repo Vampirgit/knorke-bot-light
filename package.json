@@ -1,12 +1,12 @@
 {
   "name": "knorke-bot",
   "version": "1.0.0",
-  "description": "The best Discord bot in existance",
+  "description": "The best Discord bot in existence",
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Ruben",
+  "author": "Ruben, Moritz, Dominic",
   "license": "ISC",
   "dependencies": {
     "@discordjs/voice": "^0.6.0",

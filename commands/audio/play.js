@@ -11,7 +11,6 @@ const {
     createAudioResource,
     createAudioPlayer,
 } = require('@discordjs/voice');
-const YouTube = require("discord-youtube-api");
 
 module.exports = {
     name: "play",
@@ -32,9 +31,8 @@ module.exports = {
             url = args[0];
         } else {
             try {
-                // TODO: play-dl search instead of youtube api
-                video = await searchYouTubeAsync(args);
-                url = video.url;
+                video = await play.search(url, {source: {youtube: "video"}, limit: 1});
+                url = video[0].url;
 
             } catch (err) {
                 console.log(err);
@@ -128,12 +126,6 @@ async function playSong(guild, url, Discord, channel) {
     });
 
     serverQueue.audioPlayer.on("error", (err) => console.log(err));
-}
-
-async function searchYouTubeAsync(args) {
-    const youtube = new YouTube(token.ytApiKey);
-    var video = await youtube.searchVideos(args.join(' '));
-    return video;
 }
 
 
