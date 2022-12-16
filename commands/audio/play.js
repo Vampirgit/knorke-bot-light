@@ -1,6 +1,7 @@
 const config = require(__basedir + "/config.json");
 const token = require(__basedir + "/tokens.json");
 const play = require('play-dl');
+const { EmbedBuilder } = require('discord.js');
 
 let { queue } = require('../../utils/audio/Queue');
 
@@ -74,20 +75,12 @@ module.exports = {
                     connection.subscribe(audioPlayer.instance);
 
                     queueConst.audioPlayer = audioPlayer.instance;
-                    await playSong(message.guild, queueConst.songs[0]);
+                    await playSong(message.guild, queueConst.songs[0], Discord, message.channel);
                 } else {
                     serverQueue.songs.push(url)
-                    return message.channel.send(`${video.title} ist in der Queue`)
+                    const video = await play.search(url, {source: {youtube: "video"}, limit: 1});
+                    return message.channel.send(`${video[0].title} wurde der Warteschlange hinzugefügt.`)
                 }
-
-                if (video) {
-                    const Embed = new Discord.MessageEmbed()
-                        .setColor("#304281")
-                        .setTitle("Now Playing:")
-                        .setDescription(video.title);
-                    message.channel.send({ embeds: [Embed] });
-                }
-                
             } catch (err) {
                 console.log(err);
             }
@@ -95,28 +88,43 @@ module.exports = {
     }
 }
 
-async function playSong(guild, url) {
+async function playSong(guild, url, Discord, channel) {
     const serverQueue = queue.get(guild.id);
 
     if(!url) {
         try{
             serverQueue.connection.destroy();
         } catch(e) {
-
+            console.log(e);
         }
-        
         queue.delete(guild.id);
         return;
     }
+
+    const video = await play.search(url, {source: {youtube: "video"}, limit: 1});
 
     let stream = await play.stream(url);
     let resource = createAudioResource(stream.stream, {
         inputType: stream.type
     })
     const dispatch = serverQueue.audioPlayer.play(resource);
+
+    const Embed = new EmbedBuilder()
+        .setColor("#304281")
+        .setTitle("Derzeitiger Song:")
+        .setURL(video[0].url)
+        .setDescription(video[0].title)
+        .setThumbnail(video[0].thumbnails[0].url)
+        .addFields(
+            {name: "Views", value: video[0].views.toString()},
+            {name: "Länge", value: video[0].durationRaw},
+        )
+        .setTimestamp()
+   channel.send({ embeds: [Embed] });
+
     serverQueue.audioPlayer.on(AudioPlayerStatus.Idle, () => {
         serverQueue.songs.shift();
-        playSong(guild, serverQueue.songs[0]);
+        playSong(guild, serverQueue.songs[0], Discord, channel);
     });
 
     serverQueue.audioPlayer.on("error", (err) => console.log(err));
