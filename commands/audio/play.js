@@ -36,12 +36,12 @@ module.exports = {
 
             } catch (err) {
                 console.log(err);
-                return message.reply("There was an error with the search!");
+                return message.reply("Es gab einen Fehler während der Suche!");
             }
         }
 
         const voiceChannel = message.member.voice.channel;
-        if (!voiceChannel) return message.reply('You are not in a voice channel!');
+        if (!voiceChannel) return message.reply('Du bist in keinem Voicechannel!');
 
         const connection = await joinVoiceChannel({
             channelId: voiceChannel.id,
@@ -109,7 +109,7 @@ async function playSong(guild, url, Discord, channel) {
 
     const Embed = new EmbedBuilder()
         .setColor("#304281")
-        .setTitle("Derzeitiger Song:")
+        .setTitle("Now Playing")
         .setURL(video[0].url)
         .setDescription(video[0].title)
         .setThumbnail(video[0].thumbnails[0].url)
@@ -127,6 +127,3 @@ async function playSong(guild, url, Discord, channel) {
 
     serverQueue.audioPlayer.on("error", (err) => console.log(err));
 }
-
-
-
