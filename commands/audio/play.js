@@ -31,7 +31,7 @@ module.exports = {
             url = args[0];
         } else {
             try {
-                video = await play.search(url, {source: {youtube: "video"}, limit: 1});
+                video = await play.search(args.toString(), {source: {youtube: "video"}, limit: 1});
                 url = video[0].url;
 
             } catch (err) {
